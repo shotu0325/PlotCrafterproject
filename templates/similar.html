@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body >
+<style>
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        linear-gradient(
+            to right,
+            rgba(15,23,42,0.98) 0%,
+            rgba(15,23,42,0.92) 25%,
+            rgba(15,23,42,0.75) 50%,
+            rgba(15,23,42,0.35) 75%,
+            rgba(15,23,42,0.15) 100%
+        ),
+        url("{{ url_for('static', filename='bookpages.jpg') }}");
+    background-position: right;
+    background-repeat: repeat;
+}
+
+.hero {
+    width: 92%;
+    height: 650px;
+    margin: 40px auto;
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 60px;
+    box-sizing: border-box;
+    background: rgba(15,23,42,0.25);
+    backdrop-filter: blur(4px);
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            to right,
+            #111827 15%,
+            rgba(17,24,39,.96) 35%,
+            rgba(17,24,39,.60) 60%,
+            rgba(17,24,39,.15) 100%
+        );
+}
+
+
+
+.book-card{
+    background-color: rgba(0,0,0,0.75);
+    color:white;
+
+    width:50%;
+
+    margin:20px auto;
+
+    padding:20px;
+
+    border-radius:20px;
+}
+
+</style>
+<h1 style="color:#ffffff;">You Selected</h1>
+<div class="book-card">
+<img src="{{ selected['Image-URL-M'] }}" width="50">
+
+<h3>{{ selected['Book-Title'] }}</h3>
+
+<p>✍️ {{ selected['Book-Author'] }}</p>
+
+<p>🏢 {{ selected['Publisher'] }}</p>
+
+</div>
+<h1 style="text-align: left;color: #ffffff;">⭐you may also like</h1>
+<style>
+
+
+</style>
+{% for book in results %}
+<div class="book-card">
+    <img src="{{ book['Image-URL-M'] }}" width="50" alt="{{ book['Book-Title'] }} by {{ book['Book-Author'] }}; cover shows the book title and author name, publisher {{ book['Publisher'] }}, and visible publication year {{ book['Year-Of-Publication'] }}; overall inviting illustrated or photographic cover with an informative tone">
+
+    <h3>📖 {{ book['Book-Title'] }}</h3>
+
+    <p>✍️ {{ book['Book-Author'] }}</p>
+    <p>📅 {{ book['Year-Of-Publication'] }}</p>
+    <p>🏢 {{ book['Publisher'] }}</p>
+    <p>
+⭐ Similarity:
+<b>{{ "%.2f"|format(book['Similarity Score']) }}%</b>
+</p>
+
+</div>
+{% endfor %}
+
+<a href="/">
+    <button
+        style="
+            background-color:#9404b1d3;
+            color:white;
+            border:none;
+            border-radius:30px;
+            padding:12px 25px;
+            font-size:16px;
+            font-weight:bold;
+            box-shadow:0 4px 8px rgba(193, 0, 252, 0.5);
+            cursor:pointer;
+        "
+    >
+         back to home 🏰 
+    </button>
+</a>
+</div>
+    
+</body>
+<footer style="text-align: center; color: #ffffff; margin-top: 20px;">
+    &copy; 2026 Plotcrafter.
+</footer>
+</html>

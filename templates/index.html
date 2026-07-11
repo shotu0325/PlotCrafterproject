@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlotCrafter</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+h1 {
+    font-family: 'IM Fell English SC', serif;
+    color: white;
+    text-shadow: 3px 3px black;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        linear-gradient(
+            to right,
+            rgba(15,23,42,0.98) 0%,
+            rgba(15,23,42,0.92) 25%,
+            rgba(15,23,42,0.75) 50%,
+            rgba(15,23,42,0.35) 75%,
+            rgba(15,23,42,0.15) 100%
+        ),
+        url("{{ url_for('static', filename='bookpages.jpg') }}");
+    background-position: right;
+    background-repeat: repeat;
+}
+
+.hero {
+    width: 92%;
+    height: 650px;
+    margin: 40px auto;
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 60px;
+    box-sizing: border-box;
+    background: rgba(15,23,42,0.25);
+    backdrop-filter: blur(4px);
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            to right,
+            #111827 15%,
+            rgba(17,24,39,.96) 35%,
+            rgba(17,24,39,.60) 60%,
+            rgba(17,24,39,.15) 100%
+        );
+}
+
+.logo {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 40px;
+    color: #F5E6C8;
+    letter-spacing: 3px;
+    text-shadow: 3px 3px 8px rgba(0,0,0,0.6);
+}
+
+.genre-heading {
+    color: white;
+    text-align: center;
+    margin-top: 60px;
+    font-size: 32px;
+}
+
+.genre-bar {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 30px;
+}
+
+.genre-btn {
+    background: #222;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: .3s;
+    font-size: 17px;
+}
+
+.genre-btn:hover {
+    background: #F5E6C8;
+    color: #111827;
+    transform: translateY(-3px);
+}
+
+.genre-btn.active {
+    background: #F5E6C8;
+    color: #111827;
+}
+
+.mode-toggle {
+    position: fixed;
+    top: 25px;
+    right: 30px;
+    z-index: 1000;
+}
+
+.mode-toggle a {
+    text-decoration: none;
+    font-family: 'IM Fell English SC', serif;
+    color: white;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 30px;
+    padding: 12px 22px;
+    transition: 0.3s;
+    display: inline-block;
+    text-shadow:
+        -2px -2px #000,
+         2px -2px #000,
+        -2px  2px #000,
+         2px  2px #000;
+}
+
+.mode-toggle a:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+    border-color: white;
+}
+
+#genre-books {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 30px;
+}
+
+.book-card {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(245,230,200,0.3);
+    border-radius: 15px;
+    padding: 15px;
+    width: 180px;
+    color: white;
+    text-align: center;
+}
+
+.book-card img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.book-card h3 {
+    font-size: 15px;
+    margin: 8px 0 4px;
+}
+
+.book-card p {
+    font-size: 13px;
+    margin: 2px 0;
+    opacity: 0.85;
+}
+
+.status-msg {
+    text-align: center;
+    color: #F5E6C8;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 18px;
+}
+</style>
+</head>
+<body>
+
+<div class="mode-toggle">
+    <a href="{{ url_for('timer') }}">⏳ Focus Mode</a>
+</div>
+
+<main>
+    <div style=" padding-top: 30px;">
+        <h1 class="logo">PLOTCRAFTER</h1>
+        <h2 style="font-family: 'IM Fell English SC', serif; color:#F5E6C8;">
+            <b>YOUR SMART BOOK RECOMMENDATION SYSTEM</b>
+        </h2>
+    </div>
+
+    <form action="/recommend" method="POST" style="; margin-top: 20px;">
+        <input
+            type="text"
+            name="book_name"
+            placeholder="🔍 Search books, authors..."
+            style="
+                width:300px;
+                padding:12px;
+                border:3px solid #F5E6C8;
+                border-radius:25px;
+            ">
+        <button
+            style="background-color: #F5E6C8; color: #111827; border: none; padding: 12px 24px; border-radius: 25px; cursor: pointer;"
+            type="submit">
+            Search
+        </button>
+    </form>
+
+    <h2 style="font-family: 'IM Fell English SC', serif; color: #F5E6C8; text-align: center;">
+        Browse by Genre
+    </h2>
+
+    <div class="genre-bar">
+        <button class="genre-btn" data-genre="Science Fiction & Fantasy">Fantasy</button>
+        <button class="genre-btn" data-genre="Mystery & Thriller">Mystery</button>
+        <button class="genre-btn" data-genre="Romance">Romance</button>
+        <button class="genre-btn" data-genre="Science Fiction & Fantasy">Sci-Fi</button>
+        <button class="genre-btn" data-genre="History & Politics">History</button>
+        <button class="genre-btn" data-genre="Self-Help & Wellness">Self-Help</button>
+        <button class="genre-btn" data-genre="Children & Young Adult">Children & YA</button>
+        <button class="genre-btn" data-genre="Non-Fiction">Non-Fiction</button>
+    </div>
+
+    <div id="genre-books">
+        <p class="status-msg">Pick a genre above to see books.</p>
+    </div>
+<div style="text-align:left">
+    <h2 style="color: #ffffff; margin-top:60px;">FEATURES</h2>
+    
+    <ul style="list-style-type:disc; color: #ffffff; max-width:400px;">
+        <li><b>Browse by Genre</b></li><br>
+        <li><b>Search by Author</b></li><br>
+        <li><b>ML-Based Recommendations</b></li><br>
+        <li><b>Discover Similar Books</b></li><br>
+        <li><b>Personalized Suggestions</b></li><br>
+        <li><b>Study Timer</b></li>
+    </ul>
+    </div>  
+
+    <h2 style="color: #ffffff; ">About</h2>
+    <p style="color: #ffffff;">
+        
+         PLOTCRAFTER is a machine learning based book recommendation system
+        that suggests novels according to user preferences, genres, authors,
+        and similar books.
+       
+    </p>
+</main>
+
+<footer style="text-align: center; color: #ffffff; margin: 30px 0;">
+    &copy; 2026 Plotcrafter.
+</footer>
+
+<script>
+    const genreButtons = document.querySelectorAll('.genre-btn');
+    const genreBooksContainer = document.getElementById('genre-books');
+
+    genreButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            genreButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            const genre = button.getAttribute('data-genre');
+            genreBooksContainer.innerHTML = '<p class="status-msg">Loading...</p>';
+
+            fetch("/genre/" + encodeURIComponent(genre))
+                .then(response => response.json())
+                .then(data => {
+                    genreBooksContainer.innerHTML = '';
+
+                    if (!data.books || data.books.length === 0) {
+                        genreBooksContainer.innerHTML = '<p class="status-msg">No books found for this genre.</p>';
+                        return;
+                    }
+
+                    data.books.forEach(book => {
+                        const bookCard = document.createElement('div');
+                        bookCard.classList.add('book-card');
+                        bookCard.innerHTML = `
+                            <img src="${book['Image-URL-M'] || ''}" alt="cover">
+                            <h3>📖 ${book['Book-Title'] || 'Untitled'}</h3>
+                            <p>✍️ ${book['Book-Author'] || 'Unknown'}</p>
+                            <p>📅 ${book['Year-Of-Publication'] || ''}</p>
+                            <p>🏢 ${book['Publisher'] || ''}</p>
+                        `;
+                        genreBooksContainer.appendChild(bookCard);
+                    });
+                })
+                .catch(err => {
+                    genreBooksContainer.innerHTML = '<p class="status-msg">Something went wrong loading books.</p>';
+                    console.error(err);
+                });
+        });
+    });
+</script>
+
+</body>
+</html>
