@@ -29,48 +29,12 @@ body {
     background-repeat: repeat;
 }
 
-.hero {
-    width: 92%;
-    height: 650px;
-    margin: 40px auto;
-    border-radius: 30px;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding: 60px;
-    box-sizing: border-box;
-    background: rgba(15,23,42,0.25);
-    backdrop-filter: blur(4px);
-}
-
-.hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-        linear-gradient(
-            to right,
-            #111827 15%,
-            rgba(17,24,39,.96) 35%,
-            rgba(17,24,39,.60) 60%,
-            rgba(17,24,39,.15) 100%
-        );
-}
-
 .logo {
     font-family: 'IM Fell English SC', serif;
     font-size: 40px;
     color: #F5E6C8;
     letter-spacing: 3px;
     text-shadow: 3px 3px 8px rgba(0,0,0,0.6);
-}
-
-.genre-heading {
-    color: white;
-    text-align: center;
-    margin-top: 60px;
-    font-size: 32px;
 }
 
 .genre-bar {
@@ -134,6 +98,20 @@ body {
     border-color: white;
 }
 
+.carousel-row {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 10px 30px 25px;
+}
+
+.carousel-heading {
+    color: #F5E6C8;
+    font-family: 'IM Fell English SC', serif;
+    padding-left: 30px;
+    margin-top: 40px;
+}
+
 #genre-books {
     display: flex;
     flex-wrap: wrap;
@@ -147,9 +125,10 @@ body {
     border: 1px solid rgba(245,230,200,0.3);
     border-radius: 15px;
     padding: 15px;
-    width: 180px;
+    width: 190px;
     color: white;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .book-card img {
@@ -169,29 +148,38 @@ body {
     opacity: 0.85;
 }
 
+.book-card a {
+    color: inherit;
+    text-decoration: none;
+}
+
 .status-msg {
     text-align: center;
     color: #F5E6C8;
     font-family: 'IM Fell English SC', serif;
     font-size: 18px;
 }
+
+{% include 'review_widget.css' %}
 </style>
 </head>
 <body>
+
+{% import '_macros.html' as macros %}
 
 <div class="mode-toggle">
     <a href="{{ url_for('timer') }}">⏳ Focus Mode</a>
 </div>
 
 <main>
-    <div style=" padding-top: 30px;">
+    <div style="text-align:center; padding-top: 30px;">
         <h1 class="logo">PLOTCRAFTER</h1>
         <h2 style="font-family: 'IM Fell English SC', serif; color:#F5E6C8;">
             <b>YOUR SMART BOOK RECOMMENDATION SYSTEM</b>
         </h2>
     </div>
 
-    <form action="/recommend" method="POST" style="; margin-top: 20px;">
+    <form action="/recommend" method="POST" style="text-align:center; margin-top: 20px;">
         <input
             type="text"
             name="book_name"
@@ -217,7 +205,6 @@ body {
         <button class="genre-btn" data-genre="Science Fiction & Fantasy">Fantasy</button>
         <button class="genre-btn" data-genre="Mystery & Thriller">Mystery</button>
         <button class="genre-btn" data-genre="Romance">Romance</button>
-        <button class="genre-btn" data-genre="Science Fiction & Fantasy">Sci-Fi</button>
         <button class="genre-btn" data-genre="History & Politics">History</button>
         <button class="genre-btn" data-genre="Self-Help & Wellness">Self-Help</button>
         <button class="genre-btn" data-genre="Children & Young Adult">Children & YA</button>
@@ -225,28 +212,81 @@ body {
     </div>
 
     <div id="genre-books">
-        <p class="status-msg">Pick a genre above to see books.</p>
+        <p class="status-msg">Pick a genre above to see books, or scroll down for featured picks.</p>
     </div>
-<div style="text-align:left">
-    <h2 style="color: #ffffff; margin-top:60px;">FEATURES</h2>
-    
-    <ul style="list-style-type:disc; color: #ffffff; max-width:400px;">
+
+    <h3 class="carousel-heading">Fantasy & Sci-Fi Picks</h3>
+    <div class="carousel-row">
+        {% for book in fantasy %}
+        <div class="book-card">
+            <a href="{{ url_for('similar_books', isbn=book['ISBN']) }}">
+                <img src="{{ book['Image-URL-M'] }}" alt="cover">
+                <h3>📖 {{ book['Book-Title'] }}</h3>
+                <p>✍️ {{ book['Book-Author'] }}</p>
+            </a>
+            {{ macros.review_widget(book) }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <h3 class="carousel-heading">Mystery & Thriller Picks</h3>
+    <div class="carousel-row">
+        {% for book in mystery %}
+        <div class="book-card">
+            <a href="{{ url_for('similar_books', isbn=book['ISBN']) }}">
+                <img src="{{ book['Image-URL-M'] }}" alt="cover">
+                <h3>📖 {{ book['Book-Title'] }}</h3>
+                <p>✍️ {{ book['Book-Author'] }}</p>
+            </a>
+            {{ macros.review_widget(book) }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <h3 class="carousel-heading">Romance Picks</h3>
+    <div class="carousel-row">
+        {% for book in romance %}
+        <div class="book-card">
+            <a href="{{ url_for('similar_books', isbn=book['ISBN']) }}">
+                <img src="{{ book['Image-URL-M'] }}" alt="cover">
+                <h3>📖 {{ book['Book-Title'] }}</h3>
+                <p>✍️ {{ book['Book-Author'] }}</p>
+            </a>
+            {{ macros.review_widget(book) }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <h3 class="carousel-heading">Non-Fiction Picks</h3>
+    <div class="carousel-row">
+        {% for book in science %}
+        <div class="book-card">
+            <a href="{{ url_for('similar_books', isbn=book['ISBN']) }}">
+                <img src="{{ book['Image-URL-M'] }}" alt="cover">
+                <h3>📖 {{ book['Book-Title'] }}</h3>
+                <p>✍️ {{ book['Book-Author'] }}</p>
+            </a>
+            {{ macros.review_widget(book) }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <h2 style="color: #ffffff; text-align:center; margin-top:60px;">FEATURES</h2>
+    <ul style="list-style-type:disc; color: #ffffff; max-width:400px; margin:0 auto;">
         <li><b>Browse by Genre</b></li><br>
         <li><b>Search by Author</b></li><br>
         <li><b>ML-Based Recommendations</b></li><br>
         <li><b>Discover Similar Books</b></li><br>
         <li><b>Personalized Suggestions</b></li><br>
+        <li><b>Book Reviews & Ratings</b></li><br>
         <li><b>Study Timer</b></li>
     </ul>
-    </div>  
 
-    <h2 style="color: #ffffff; ">About</h2>
-    <p style="color: #ffffff;">
-        
-         PLOTCRAFTER is a machine learning based book recommendation system
+    <h2 style="color: #ffffff; text-align:center;">About</h2>
+    <p style="color: #ffffff; text-align:center; max-width:600px; margin:0 auto;">
+        PLOTCRAFTER is a machine learning based book recommendation system
         that suggests novels according to user preferences, genres, authors,
         and similar books.
-       
     </p>
 </main>
 
@@ -257,6 +297,33 @@ body {
 <script>
     const genreButtons = document.querySelectorAll('.genre-btn');
     const genreBooksContainer = document.getElementById('genre-books');
+
+    // Builds the same review widget markup as the Jinja macro, for JS-rendered cards
+    function reviewWidgetHTML(book) {
+        const ratingLabel = book.avg_rating
+            ? `⭐ ${book.avg_rating}/5 (${book.review_count})`
+            : `☆ No reviews — add one`;
+
+        return `
+            <details class="review-widget">
+                <summary>${ratingLabel}</summary>
+                <form action="/add_review/${book['ISBN']}" method="POST" class="mini-review-form">
+                    <input type="hidden" name="next" value="${window.location.pathname}">
+                    <input type="text" name="reviewer_name" placeholder="Your name" required maxlength="50">
+                    <select name="rating" required>
+                        <option value="">Rating</option>
+                        <option value="5">⭐⭐⭐⭐⭐</option>
+                        <option value="4">⭐⭐⭐⭐</option>
+                        <option value="3">⭐⭐⭐</option>
+                        <option value="2">⭐⭐</option>
+                        <option value="1">⭐</option>
+                    </select>
+                    <textarea name="review_text" rows="2" placeholder="Optional comment" maxlength="500"></textarea>
+                    <button type="submit">Submit</button>
+                </form>
+            </details>
+        `;
+    }
 
     genreButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -280,11 +347,13 @@ body {
                         const bookCard = document.createElement('div');
                         bookCard.classList.add('book-card');
                         bookCard.innerHTML = `
-                            <img src="${book['Image-URL-M'] || ''}" alt="cover">
-                            <h3>📖 ${book['Book-Title'] || 'Untitled'}</h3>
-                            <p>✍️ ${book['Book-Author'] || 'Unknown'}</p>
-                            <p>📅 ${book['Year-Of-Publication'] || ''}</p>
-                            <p>🏢 ${book['Publisher'] || ''}</p>
+                            <a href="/similar/${book['ISBN']}">
+                                <img src="${book['Image-URL-M'] || ''}" alt="cover">
+                                <h3>📖 ${book['Book-Title'] || 'Untitled'}</h3>
+                                <p>✍️ ${book['Book-Author'] || 'Unknown'}</p>
+                                <p>📅 ${book['Year-Of-Publication'] || ''}</p>
+                            </a>
+                            ${reviewWidgetHTML(book)}
                         `;
                         genreBooksContainer.appendChild(bookCard);
                     });

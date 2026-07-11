@@ -1,0 +1,55 @@
+/* ---------- Review widget (used on index.html, result.html, similar.html) ---------- */
+.review-widget {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #F5E6C8;
+}
+
+.review-widget summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.review-widget summary::-webkit-details-marker {
+    display: none;
+}
+
+.mini-review-form {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: rgba(0,0,0,0.3);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.mini-review-form input[type="text"],
+.mini-review-form select,
+.mini-review-form textarea {
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.05);
+    color: white;
+    font-size: 12px;
+    font-family: inherit;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.mini-review-form button {
+    background: #F5E6C8;
+    color: #111827;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    align-self: flex-start;
+}

@@ -1,135 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body >
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ selected['Book-Title'] }} - PlotCrafter</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap" rel="stylesheet">
 <style>
 body {
     margin: 0;
     min-height: 100vh;
-    background:
-        linear-gradient(
-            to right,
-            rgba(15,23,42,0.98) 0%,
-            rgba(15,23,42,0.92) 25%,
-            rgba(15,23,42,0.75) 50%,
-            rgba(15,23,42,0.35) 75%,
-            rgba(15,23,42,0.15) 100%
-        ),
-        url("{{ url_for('static', filename='bookpages.jpg') }}");
-    background-position: right;
-    background-repeat: repeat;
+    background: #0f172a;
+    font-family: Arial, sans-serif;
+    color: white;
+    padding: 30px;
 }
 
-.hero {
-    width: 92%;
-    height: 650px;
-    margin: 40px auto;
-    border-radius: 30px;
-    overflow: hidden;
-    position: relative;
+.book-header {
     display: flex;
-    align-items: center;
-    padding: 60px;
-    box-sizing: border-box;
-    background: rgba(15,23,42,0.25);
-    backdrop-filter: blur(4px);
+    gap: 30px;
+    align-items: flex-start;
+    max-width: 900px;
+    margin: 0 auto 40px;
 }
 
-.hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-        linear-gradient(
-            to right,
-            #111827 15%,
-            rgba(17,24,39,.96) 35%,
-            rgba(17,24,39,.60) 60%,
-            rgba(17,24,39,.15) 100%
-        );
+.book-header img {
+    width: 150px;
+    border-radius: 10px;
 }
 
-
-
-.book-card{
-    background-color: rgba(0,0,0,0.75);
-    color:white;
-
-    width:50%;
-
-    margin:20px auto;
-
-    padding:20px;
-
-    border-radius:20px;
+.book-header h1 {
+    font-family: 'IM Fell English SC', serif;
+    color: #F5E6C8;
+    margin: 0 0 10px;
 }
 
+.section {
+    max-width: 900px;
+    margin: 0 auto 40px;
+}
+
+.section h2 {
+    color: #F5E6C8;
+    font-family: 'IM Fell English SC', serif;
+    border-bottom: 1px solid rgba(245,230,200,0.3);
+    padding-bottom: 8px;
+}
+
+.review-card {
+    background: rgba(255,255,255,0.04);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.review-card .stars {
+    color: #F5E6C8;
+    letter-spacing: 3px;
+}
+
+.review-card .meta {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-bottom: 6px;
+}
+
+.no-reviews {
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.similar-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.similar-card {
+    background: rgba(255,255,255,0.05);
+    padding: 12px;
+    border-radius: 10px;
+    width: 170px;
+    text-align: center;
+}
+
+.similar-card img {
+    max-width: 100%;
+    border-radius: 6px;
+}
+
+a.back-link {
+    color: #F5E6C8;
+    text-decoration: none;
+}
+
+{% include 'review_widget.css' %}
 </style>
-<h1 style="color:#ffffff;">You Selected</h1>
-<div class="book-card">
-<img src="{{ selected['Image-URL-M'] }}" width="50">
+</head>
+<body>
 
-<h3>{{ selected['Book-Title'] }}</h3>
+{% import '_macros.html' as macros %}
 
-<p>✍️ {{ selected['Book-Author'] }}</p>
+<a href="{{ url_for('index') }}" class="back-link">&larr; Back to Library</a>
 
-<p>🏢 {{ selected['Publisher'] }}</p>
-
+<div class="book-header">
+    <img src="{{ selected['Image-URL-M'] }}" alt="cover">
+    <div>
+        <h1>{{ selected['Book-Title'] }}</h1>
+        <p>by {{ selected['Book-Author'] }}</p>
+        <p>{{ selected['Publisher'] }} &middot; {{ selected['Year-Of-Publication'] }}</p>
+        {{ macros.review_widget(selected) }}
+    </div>
 </div>
-<h1 style="text-align: left;color: #ffffff;">⭐you may also like</h1>
-<style>
 
-
-</style>
-{% for book in results %}
-<div class="book-card">
-    <img src="{{ book['Image-URL-M'] }}" width="50" alt="{{ book['Book-Title'] }} by {{ book['Book-Author'] }}; cover shows the book title and author name, publisher {{ book['Publisher'] }}, and visible publication year {{ book['Year-Of-Publication'] }}; overall inviting illustrated or photographic cover with an informative tone">
-
-    <h3>📖 {{ book['Book-Title'] }}</h3>
-
-    <p>✍️ {{ book['Book-Author'] }}</p>
-    <p>📅 {{ book['Year-Of-Publication'] }}</p>
-    <p>🏢 {{ book['Publisher'] }}</p>
-    <p>
-⭐ Similarity:
-<b>{{ "%.2f"|format(book['Similarity Score']) }}%</b>
-</p>
-
+<div class="section">
+    <h2>All Reviews</h2>
+    {% if reviews %}
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="stars">{{ '⭐' * review.rating }}</div>
+            <div class="meta">{{ review.reviewer_name }} &middot; {{ review.date_posted }}</div>
+            {% if review.review_text %}
+            <p>{{ review.review_text }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-reviews">No reviews yet for this book.</p>
+    {% endif %}
 </div>
-{% endfor %}
 
-<a href="/">
-    <button
-        style="
-            background-color:#9404b1d3;
-            color:white;
-            border:none;
-            border-radius:30px;
-            padding:12px 25px;
-            font-size:16px;
-            font-weight:bold;
-            box-shadow:0 4px 8px rgba(193, 0, 252, 0.5);
-            cursor:pointer;
-        "
-    >
-         back to home 🏰 
-    </button>
-</a>
+<div class="section">
+    <h2>You might also like</h2>
+    <div class="similar-grid">
+        {% for book in results %}
+        <div class="similar-card">
+            <a href="{{ url_for('similar_books', isbn=book['ISBN']) }}" style="color:white; text-decoration:none;">
+                <img src="{{ book['Image-URL-M'] }}" alt="cover">
+                <p style="font-size:14px; margin:8px 0 4px;">{{ book['Book-Title'] }}</p>
+                <p style="font-size:12px; opacity:0.7;">{{ "%.0f"|format(book['Similarity Score']) }}% match</p>
+            </a>
+            {{ macros.review_widget(book) }}
+        </div>
+        {% endfor %}
+    </div>
 </div>
-    
+
 </body>
-<footer style="text-align: center; color: #ffffff; margin-top: 20px;">
-    &copy; 2026 Plotcrafter.
-</footer>
 </html>

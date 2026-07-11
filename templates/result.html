@@ -1,134 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>result</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Results - PlotCrafter</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #0f172a;
+    font-family: Arial, sans-serif;
+    color: white;
+    padding: 30px;
+}
+
+h1 {
+    font-family: 'IM Fell English SC', serif;
+    color: #F5E6C8;
+    text-align: center;
+}
+
+a.back-link {
+    color: #F5E6C8;
+    text-decoration: none;
+}
+
+.results-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    max-width: 1000px;
+    margin: 30px auto;
+}
+
+.result-card {
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 12px;
+    width: 180px;
+    text-align: center;
+}
+
+.result-card img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.result-card h3 {
+    font-size: 14px;
+    margin: 8px 0 4px;
+}
+
+.result-card p {
+    font-size: 12px;
+    opacity: 0.8;
+    margin: 2px 0;
+}
+
+.no-results {
+    text-align: center;
+    color: #F5E6C8;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 20px;
+    margin-top: 60px;
+}
+
+{% include 'review_widget.css' %}
+</style>
 </head>
 <body>
-<h1 style="color: #ffffff;">🔍Search Results</h1>
-<style>
-body{
 
-    margin:0;
+{% import '_macros.html' as macros %}
 
-    min-height:100vh;
+<a href="{{ url_for('index') }}" class="back-link">&larr; Back to Library</a>
+<h1>Search Results</h1>
 
-    background:
-    linear-gradient(
-        to right,
-        rgba(15,23,42,0.98) 0%,
-        rgba(15,23,42,0.92) 25%,
-        rgba(15,23,42,0.75) 50%,
-        rgba(15,23,42,0.35) 75%,
-        rgba(15,23,42,0.15) 100%
-    ),
-    url("{{ url_for('static', filename='bookpages.jpg') }}");
-
-
-    background-position:right;
-
-    background-repeat:repeat;
-    
-
-}
-.hero{
-
-    width:92%;
-
-    height:650px;
-
-    margin:40px auto;
-
-    border-radius:30px;
-
-    overflow:hidden;
-    position:relative;
-
-    display:flex;
-
-    align-items:center;
-
-    padding:60px;
-
-    box-sizing:border-box;
-
-    background:rgba(15,23,42,0.25);
-
-    backdrop-filter:blur(4px);
-}
-.hero::before{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-    linear-gradient(
-        to right,
-        #111827 15%,
-        rgba(17,24,39,.96) 35%,
-        rgba(17,24,39,.60) 60%,
-        rgba(17,24,39,.15) 100%
-    );
-}
-.book-card{
-    background-color: rgba(0,0,0,0.75);
-    color:white;
-
-    width:50%;
-
-    margin:20px auto;
-
-    padding:20px;
-
-    border-radius:20px;
-}
-
-</style>
-{% for book in results %}
-<a href="/similar/{{book['ISBN']}}">
-<div class="book-card">
-    <img src="{{ book['Image-URL-M'] }}" width="50">
-
-    <h3>📖 {{ book['Book-Title'] }}</h3>
-
-    <p>✍️ {{ book['Book-Author'] }}</p>
-    <p>📅 {{ book['Year-Of-Publication'] }}</p>
-    <p>🏢 {{ book['Publisher'] }}</p>
-
+{% if error %}
+    <p class="no-results">{{ error }}</p>
+{% elif results %}
+<div class="results-grid">
+    {% for book in results %}
+    <div class="result-card">
+        <a href="{{ url_for('similar_books', isbn=book['ISBN']) }}" style="color:white; text-decoration:none;">
+            <img src="{{ book['Image-URL-M'] }}" alt="cover">
+            <h3>📖 {{ book['Book-Title'] }}</h3>
+            <p>✍️ {{ book['Book-Author'] }}</p>
+            <p>📅 {{ book['Year-Of-Publication'] }}</p>
+        </a>
+        {{ macros.review_widget(book) }}
+    </div>
+    {% endfor %}
 </div>
-</a>
+{% else %}
+    <p class="no-results">No matching books found.</p>
+{% endif %}
 
-{% endfor %}
-
-
-
-<br>
-<h2 style="color: #ffffff;">thankyou for choosing PLOTCRAFTER</h2>
-<a href="/">
-    <button
-        style="
-            background-color:#9404b1d3;
-            color:white;
-            border:none;
-            border-radius:30px;
-            padding:12px 25px;
-            font-size:16px;
-            font-weight:bold;
-            box-shadow:0 4px 8px rgba(252, 113, 0, 0.459);
-            cursor:pointer;
-        "
-    >
-         back to home 🏰 
-    </button>
-</a>
-</div>
-    
 </body>
-<footer style="text-align: center; color: #ffffff; margin-top: 20px;">
-    &copy; 2026 Plotcrafter.
-</footer>
 </html>
