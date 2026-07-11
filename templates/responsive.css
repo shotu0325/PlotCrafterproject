@@ -1,0 +1,93 @@
+/* ==========================================================
+   RESPONSIVE / MOBILE FIXES
+   Paste this at the END of the <style> block on every page
+   (index.html, result.html, similar.html, timer.html)
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+    /* Prevent horizontal scrolling of the whole page */
+    body {
+        overflow-x: hidden;
+        padding: 15px !important;
+    }
+
+    /* Search bar and buttons shouldn't force a fixed width */
+    input[type="text"] {
+        width: 90% !important;
+        max-width: 300px;
+    }
+
+    /* Book cards: let them wrap onto multiple lines instead of
+       forcing a fixed pixel width + horizontal scroll */
+    .book-card,
+    .result-card,
+    .similar-card {
+        width: 45% !important;
+        min-width: 130px;
+    }
+
+    /* Carousels: allow wrapping instead of forcing single-row scroll */
+    .carousel-row {
+        flex-wrap: wrap;
+        overflow-x: visible;
+        justify-content: center;
+        padding: 10px 15px 20px;
+    }
+
+    /* Genre buttons: smaller padding/font so they fit more per row */
+    .genre-btn {
+        padding: 8px 14px;
+        font-size: 14px;
+    }
+
+    /* Top-right floating button: move it inline instead of overlapping title */
+    .mode-toggle {
+        position: static;
+        text-align: center;
+        margin: 15px 0;
+    }
+
+    /* Book detail header: stack image above text instead of side-by-side */
+    .book-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .book-header img {
+        width: 130px;
+    }
+
+    /* Results/similar grids: center and shrink card width */
+    .results-grid,
+    .similar-grid {
+        gap: 12px;
+    }
+
+    /* Headings: slightly smaller on phones */
+    h1 {
+        font-size: 28px !important;
+    }
+
+    /* Timer page: shrink the giant countdown text so it fits */
+    #timer {
+        font-size: 48px !important;
+    }
+
+    /* Spotify box: don't let it overlap content on small screens */
+    .spotify-box {
+        position: static !important;
+        width: 90% !important;
+        margin: 20px auto;
+    }
+}
+
+@media (max-width: 400px) {
+    /* Extra-small phones: cards go full width, one per row */
+    .book-card,
+    .result-card,
+    .similar-card {
+        width: 90% !important;
+    }
+}
